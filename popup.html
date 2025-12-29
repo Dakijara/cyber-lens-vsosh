@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>КиберЛинза</title>
+  <link rel="stylesheet" href="styles/popup.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">КиберЛинза</div>
+      <a class="link" href="#" id="openOptions">Настройки</a>
+    </div>
+
+    <div class="block">
+      <div class="label">Проверить URL</div>
+      <input id="urlInput" class="input" placeholder="https://example.com" />
+      <button id="checkUrlBtn" class="btn">Проверить URL</button>
+    </div>
+
+    <div class="block">
+      <div class="label">Проверить хэш файла</div>
+      <input id="hashInput" class="input" placeholder="MD5 / SHA1 / SHA256 (hex)" />
+      <button id="checkHashBtn" class="btn">Проверить хэш</button>
+    </div>
+
+    <div class="result" id="resultBox">
+      <div class="resultTitle">Результат</div>
+      <pre class="resultText" id="resultText">Нет данных</pre>
+    </div>
+
+    <div class="footer">
+      <span id="statusLine"></span>
+    </div>
+  </div>
+
+  <script src="src/popup.js"></script>
+</body>
+</html>
