@@ -1,4 +1,4 @@
-# КиберЛинза (CyberLens) — проверка ссылок и файлов через Kaspersky OpenTIP (KTIP)
+# КиберЛинза (CyberLens) - проверка ссылок и файлов через Kaspersky OpenTIP (KTIP)
 
 ## Возможности
 
