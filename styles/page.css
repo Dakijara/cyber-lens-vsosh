@@ -1,45 +1,65 @@
+/* /styles/page.css */
+
+/* Светлая тема по умолчанию */
 :root {
   --bg: #ffffff;
   --surface: #f8fafc;
   --fg: #111827;
   --muted: #6b7280;
+
   --border: #e5e7eb;
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
-  --accent-soft: #ede9fe;
-  --accent-soft2: #f5f3ff;
+
+  /* Фиолетовая палитра */
+  --accent: #7c3aed;       /* violet-600 */
+  --accent-hover: #6d28d9; /* violet-700 */
+  --accent-soft: #ede9fe;  /* violet-100 */
+  --accent-soft2: #f5f3ff; /* violet-50 */
+
+  /* Кнопки */
   --btn: var(--accent);
   --btnfg: #ffffff;
+
+  /* Тени */
   --shadow: 0 10px 30px rgba(124, 58, 237, 0.10);
   --shadow-soft: 0 6px 16px rgba(17, 24, 39, 0.08);
-  --result-ok-bg: #059669;
-  --result-bad-bg: #dc2626;
-  --result-unk-bg: #4b5563;
+
+  /* Заливки результата (обязательно контрастные) */
+  --result-ok-bg: #059669;   /* emerald-600 */
+  --result-bad-bg: #dc2626;  /* red-600 */
+  --result-unk-bg: #4b5563;  /* gray-600 */
   --result-text: #ffffff;
 }
 
+/* Тёмная тема */
 :root[data-theme="dark"] {
   --bg: #0b1020;
   --surface: #101a33;
   --fg: #e5e7eb;
   --muted: #a1a1aa;
+
   --border: #27304a;
-  --accent: #a78bfa;
-  --accent-hover: #c4b5fd;
+
+  --accent: #a78bfa;       /* violet-300 */
+  --accent-hover: #c4b5fd; /* violet-200 */
   --accent-soft: rgba(167, 139, 250, 0.14);
   --accent-soft2: rgba(167, 139, 250, 0.08);
-  --btn: #8b5cf6;
+
+  --btn: #8b5cf6;          /* violet-500 */
   --btnfg: #0b1020;
+
   --shadow: 0 14px 40px rgba(139, 92, 246, 0.18);
   --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.35);
-  --result-ok-bg: #10b981;
-  --result-bad-bg: #ef4444;
-  --result-unk-bg: #6b7280;
+
+  /* В тёмной теме тоже делаем плотные заливки результата */
+  --result-ok-bg: #10b981;   /* emerald-500 */
+  --result-bad-bg: #ef4444;  /* red-500 */
+  --result-unk-bg: #6b7280;  /* gray-500 */
   --result-text: #ffffff;
 }
 
 * { box-sizing: border-box; }
 
+/* Плавность смены темы/цветов */
 html, body {
   transition:
     background-color 220ms ease,
@@ -51,21 +71,23 @@ body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--fg);
-  width: 360px;
+  min-width: 400px;
+  min-height: 500px;
 }
 
-.header, .block, .result,
+/* Плавные переходы для основных элементов */
+.page, .header, .block, .result,
 .input, .btn, .link {
   transition:
     background-color 220ms ease,
     color 220ms ease,
     border-color 220ms ease,
     box-shadow 220ms ease,
-    filter 220ms ease,
+    filter 120ms ease,
     transform 120ms ease;
 }
 
-.wrap { padding: 12px; }
+.page { padding: 12px; }
 
 .header {
   display: flex;
@@ -85,12 +107,6 @@ body {
   letter-spacing: 0.2px;
 }
 
-.headerActions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
 .link {
   color: var(--accent);
   text-decoration: none;
@@ -98,20 +114,6 @@ body {
   font-weight: 700;
 }
 .link:hover { color: var(--accent-hover); }
-
-.gearBtn {
-  border: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--accent-soft2), transparent);
-  color: var(--accent);
-  border-radius: 10px;
-  padding: 6px 8px;
-  cursor: pointer;
-  font-weight: 900;
-  line-height: 1;
-  box-shadow: var(--shadow-soft);
-}
-.gearBtn:hover { color: var(--accent-hover); }
-.gearBtn:active { transform: translateY(1px); }
 
 .block {
   border: 1px solid var(--border);
@@ -161,6 +163,7 @@ body {
 .btn:hover { filter: brightness(1.03); }
 .btn:active { transform: translateY(1px); }
 
+/* Результат по умолчанию */
 .result {
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -169,6 +172,7 @@ body {
   box-shadow: var(--shadow-soft);
 }
 
+/* Заголовок результата */
 .resultTitle {
   font-size: 12px;
   color: var(--muted);
@@ -176,6 +180,7 @@ body {
   font-weight: 800;
 }
 
+/* Текст результата */
 .resultText {
   margin: 0;
   white-space: pre-wrap;
@@ -183,6 +188,7 @@ body {
   line-height: 1.35;
 }
 
+/* Когда есть вердикт — заливаем ВЕСЬ фон результата цветом статуса, белый текст */
 .result.filled {
   color: var(--result-text);
   border-color: transparent;
@@ -197,6 +203,7 @@ body {
   color: var(--result-text);
 }
 
+/* Конкретные заливки */
 .result.filled.ok  { background: var(--result-ok-bg); }
 .result.filled.bad { background: var(--result-bad-bg); }
 .result.filled.unk { background: var(--result-unk-bg); }
@@ -206,102 +213,4 @@ body {
   font-size: 12px;
   color: var(--muted);
   padding: 0 2px;
-}
-
-/* ---------- Overlay (быстрые настройки) ---------- */
-.overlay {
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 999;
-}
-
-.overlay.isOpen {
-  display: block;
-}
-
-.overlayBackdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(3px);
-  opacity: 0;
-  transition: opacity 220ms ease;
-}
-
-.overlay.isOpen .overlayBackdrop {
-  opacity: 1;
-}
-
-.overlayPanel {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  top: 12px;
-
-  transform: translateY(10px);
-  opacity: 0;
-  transition: transform 220ms ease, opacity 220ms ease;
-}
-
-.overlay.isOpen .overlayPanel {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.overlayHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 10px;
-  border-radius: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 10px;
-}
-
-.overlayTitle {
-  font-weight: 900;
-  font-size: 13px;
-  letter-spacing: 0.2px;
-}
-
-.overlayClose {
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--fg);
-  border-radius: 10px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-weight: 900;
-  box-shadow: var(--shadow-soft);
-}
-.overlayClose:hover { filter: brightness(1.03); }
-.overlayClose:active { transform: translateY(1px); }
-
-.overlayRow {
-  display: flex;
-  gap: 8px;
-  margin-top: 6px;
-}
-.overlayRow .btn { width: 100%; }
-
-.qsStatus {
-  margin-top: 8px;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--muted);
-  min-height: 16px;
-}
-
-.overlayLinks {
-  margin-top: 10px;
-}
-
-.muted {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 10px;
-  line-height: 1.4;
 }

@@ -3,53 +3,172 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="/icons/favicon.ico" sizes="64x64">
   <title>КиберЛинза — Настройки</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 16px; }
-    .box { max-width: 720px; }
-    label { display:block; margin: 12px 0 6px; font-weight: 600; }
-    input, select { width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; }
-    .row { display:flex; gap: 10px; margin-top: 14px; }
-    button { padding: 10px 14px; border: 0; border-radius: 10px; background: #111827; color: white; cursor: pointer; font-weight: 700; }
-    .muted { color:#6b7280; font-size: 13px; }
-    .status { margin-top: 10px; font-size: 13px; }
-    a { color:#2563eb; text-decoration:none; }
-    code { background:#f3f4f6; padding: 2px 6px; border-radius: 6px; }
+    :root {
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --fg: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #7c3aed;
+      --accent-hover: #6d28d9;
+      --accent-soft: #ede9fe;
+      --btn: var(--accent);
+      --btnfg: #ffffff;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0b1020;
+      --surface: #101a33;
+      --fg: #e5e7eb;
+      --muted: #a1a1aa;
+      --border: #27304a;
+      --accent: #a78bfa;
+      --accent-hover: #c4b5fd;
+      --accent-soft: rgba(167, 139, 250, 0.14);
+      --btn: #8b5cf6;
+      --btnfg: #0b1020;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 16px;
+      background: var(--bg);
+      color: var(--fg);
+      transition: background-color 220ms ease, color 220ms ease;
+    }
+
+    .box { max-width: 760px; }
+
+    h2 {
+      margin: 0 0 10px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--accent-soft), transparent);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+    }
+
+    label {
+      display:block;
+      margin: 14px 0 6px;
+      font-weight: 800;
+      color: var(--fg);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--fg);
+      outline: none;
+      transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18);
+    }
+
+    .row {
+      display:flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--btn);
+      color: var(--btnfg);
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover { border-color: var(--accent); }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration:none;
+      font-weight: 800;
+    }
+    a:hover { color: var(--accent-hover); }
+
+    code {
+      background: rgba(124,58,237,0.10);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>КиберЛинза — Настройки</h2>
-    <p class="muted">
-      Вставьте API-ключ OpenTIP. Ключ хранится в <code>browser.storage.local</code>.
-      Не публикуйте его в репозитории.
-    </p>
+    <h2>КиберЛинза — Все настройки</h2>
+    <div class="card">
 
-    <label for="apiKey">API-ключ OpenTIP</label>
-    <input id="apiKey" placeholder="Вставьте ключ сюда" />
+      <p class="muted">
+        Получить API-ключ OpenTIP можно
+        <a href="https://opentip.kaspersky.com/token" target="_blank" rel="noreferrer">здесь</a>.
+      </p>
 
-    <p class="muted">
-      Справка OpenTIP: <a href="https://opentip.kaspersky.com/Help_ru/Doc_data/ManagingToken.htm" target="_blank" rel="noreferrer">как управлять токенами</a>
-    </p>
+      <label for="apiKey">API-ключ OpenTIP (при необходимости)</label>
+      <input id="apiKey" placeholder="Вставьте ключ сюда" type="password"/>
 
-    <label for="language">Язык</label>
-    <select id="language">
-      <option value="ru">Русский</option>
-      <option value="en">English</option>
-    </select>
+      <label for="language">Язык</label>
+      <select id="language">
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+      </select>
 
-    <label for="theme">Тема</label>
-    <select id="theme">
-      <option value="light">Светлая</option>
-      <option value="dark">Тёмная</option>
-    </select>
+      <label for="theme">Тема</label>
+      <select id="theme">
+        <option value="light">Светлая</option>
+        <option value="dark">Тёмная</option>
+      </select>
 
-    <div class="row">
-      <button id="saveBtn">Сохранить</button>
-      <button id="testBtn" style="background:#2563eb;">Проверить ключ</button>
+      <div class="row">
+        <button id="saveBtn">Сохранить</button>
+        <button id="testBtn" class="secondary">Проверить ключ</button>
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <hr style="border:0; border-top:1px solid var(--border); margin:14px 0;">
+
+      <div class="muted">
+        WIP планируются новые функции
+      </div>
     </div>
-
-    <div class="status" id="status"></div>
   </div>
 
   <script src="src/options.js"></script>

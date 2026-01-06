@@ -1,13 +1,27 @@
-// /src/options.js
+function setStatus(text) {
+  document.getElementById("status").textContent = text || "";
+}
 
-import { getSettings, setSettings } from "./storage.js";
+function applyTheme(theme) {
+  const t = (theme === "dark") ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", t);
+}
+
+async function getLocalSettings() {
+  const data = await browser.storage.local.get({
+    apiKey: "",
+    language: "ru",
+    theme: "light"
+  });
+  return data;
+}
+
+async function setLocalSettings(patch) {
+  await browser.storage.local.set(patch);
+}
 
 async function send(message) {
   return await browser.runtime.sendMessage(message);
-}
-
-function setStatus(text) {
-  document.getElementById("status").textContent = text || "";
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -15,13 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const langEl = document.getElementById("language");
   const themeEl = document.getElementById("theme");
 
-  const settings = await getSettings();
-  apiKeyEl.value = settings.apiKey;
-  langEl.value = settings.language;
-  themeEl.value = settings.theme;
+  const s = await getLocalSettings();
+  apiKeyEl.value = s.apiKey || "";
+  langEl.value = s.language || "ru";
+  themeEl.value = s.theme || "light";
+  applyTheme(s.theme);
+
+  themeEl.addEventListener("change", async () => {
+    applyTheme(themeEl.value);
+    await setLocalSettings({ theme: themeEl.value });
+  });
 
   document.getElementById("saveBtn").addEventListener("click", async () => {
-    await setSettings({
+    await setLocalSettings({
       apiKey: apiKeyEl.value.trim(),
       language: langEl.value,
       theme: themeEl.value
@@ -30,16 +50,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   document.getElementById("testBtn").addEventListener("click", async () => {
-    // Простейшая проверка: пробуем пингнуть фоновый скрипт и сделать тестовый запрос по URL
-    setStatus("Проверяю ключ...");
+    setStatus("Проверка API-ключа...");
+    await setLocalSettings({ apiKey: apiKeyEl.value.trim() });
 
-    await setSettings({ apiKey: apiKeyEl.value.trim() });
+    const testSha256Empty =
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
-    const res = await send({ type: "CHECK_URL", url: "https://example.com" });
-    if (res?.error) {
-      setStatus(`Ошибка: ${res.message}`);
-    } else {
-      setStatus(`Успешно. Вердикт для example.com: ${res.label} (Zone: ${res.zone ?? "N/A"})`);
+    const res = await send({ type: "CHECK_HASH", hash: testSha256Empty });
+
+    if (res && res.error) {
+      setStatus("2 — некорректный API-ключ");
+      return;
     }
+    setStatus("1 — корректный API-ключ");
   });
 });

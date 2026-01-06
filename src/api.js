@@ -1,70 +1,113 @@
-// /src/api.js
+window.CyberlensAPI = (function () {
+  const BASE = "https://opentip.kaspersky.com/api/v1";
 
-import { classifyOpentip } from "./utils.js";
-
-const BASE = "https://opentip.kaspersky.com/api/v1";
-
-// Универсальный fetch с ключом
-async function opentipFetch(path, apiKey) {
-  if (!apiKey) {
-    throw new Error("Не задан API-ключ. Откройте настройки расширения и вставьте ключ OpenTIP.");
+  function pickMessageFromBody(data) {
+    if (!data) return "";
+    return (
+      data.message ||
+      data.error ||
+      data.Message ||
+      data.Error ||
+      data.detail ||
+      data.raw ||
+      ""
+    );
   }
 
-  const url = `${BASE}${path}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "x-api-key": apiKey,
-      "accept": "application/json"
+  async function opentipFetch(path, apiKey) {
+    if (!apiKey) {
+      throw new Error("Не задан API-ключ. Откройте настройки расширения и вставьте ключ OpenTIP.");
     }
-  });
 
-  // OpenTIP часто возвращает JSON. Если вернёт текст — обработаем.
-  const text = await res.text();
-  let data = null;
-  try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = { raw: text };
+    const url = `${BASE}${path}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "X-API-KEY": apiKey,
+        "accept": "application/json"
+      }
+    });
+
+    const text = await res.text();
+    let data = null;
+
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = { raw: text };
+    }
+
+    // 404 = нет данных → считаем "Grey/Неизвестно"
+    if (res.status === 404) {
+      return { Zone: "Grey", _notFound: true, _httpStatus: 404 };
+    }
+
+    if (!res.ok) {
+      const msg = pickMessageFromBody(data);
+      const suffix = msg ? ` | Ответ: ${String(msg).slice(0, 400)}` : "";
+      const err = new Error(`Ошибка OpenTIP: HTTP ${res.status}${suffix}`);
+      err.status = res.status;
+      err.data = data;
+      err.url = url;
+      throw err;
+    }
+
+    return data;
   }
 
-  if (!res.ok) {
-    const msg = data?.message || data?.error || `HTTP ${res.status}`;
-    const err = new Error(`Ошибка OpenTIP: ${msg}`);
-    err.status = res.status;
-    err.data = data;
-    throw err;
+  async function checkDomain(domain, apiKey) {
+    const d = String(domain || "").trim().toLowerCase();
+    const encoded = encodeURIComponent(d);
+    const data = await opentipFetch(`/search/domain?request=${encoded}`, apiKey);
+    const cls = window.CyberlensUtils.classifyOpentip(data);
+
+    return {
+      type: "domain",
+      input: d,
+      verdict: cls.verdict,
+      label: cls.label,
+      zone: cls.zone,
+      raw: data
+    };
   }
 
-  return data;
-}
+  async function checkUrl(url, apiKey) {
+    // В режиме "1 запрос" мы проверяем только домен (host).
+    // Это устойчиво и не вызывает 400 на /search/url.
+    let host = "";
 
-export async function checkUrl(url, apiKey) {
-  const encoded = encodeURIComponent(url);
-  const data = await opentipFetch(`/search/url?request=${encoded}`, apiKey);
-  const cls = classifyOpentip(data);
+    try {
+      const u = new URL(url);
+      host = u.host;
+    } catch {
+      // если передали не URL, а домен — используем как есть
+      host = String(url || "").trim();
+    }
+
+    if (!host) {
+      throw new Error("Пустой URL/домен.");
+    }
+
+    return await checkDomain(host, apiKey);
+  }
+
+  async function checkHash(hash, apiKey) {
+    const encoded = encodeURIComponent(hash);
+    const data = await opentipFetch(`/search/hash?request=${encoded}`, apiKey);
+    const cls = window.CyberlensUtils.classifyOpentip(data);
+
+    return {
+      type: "hash",
+      input: hash,
+      verdict: cls.verdict,
+      label: cls.label,
+      zone: cls.zone,
+      raw: data
+    };
+  }
 
   return {
-    type: "url",
-    input: url,
-    verdict: cls.verdict,
-    label: cls.label,
-    zone: cls.zone,
-    raw: data
+    checkUrl,
+    checkHash
   };
-}
-
-export async function checkHash(hash, apiKey) {
-  const encoded = encodeURIComponent(hash);
-  const data = await opentipFetch(`/search/hash?request=${encoded}`, apiKey);
-  const cls = classifyOpentip(data);
-
-  return {
-    type: "hash",
-    input: hash,
-    verdict: cls.verdict,
-    label: cls.label,
-    zone: cls.zone,
-    raw: data
-  };
-}
+})();
