@@ -37,7 +37,6 @@ window.CyberlensAPI = (function () {
       data = { raw: text };
     }
 
-    // 404 = нет данных → считаем "Grey/Неизвестно"
     if (res.status === 404) {
       return { Zone: "Grey", _notFound: true, _httpStatus: 404 };
     }
@@ -72,15 +71,12 @@ window.CyberlensAPI = (function () {
   }
 
   async function checkUrl(url, apiKey) {
-    // В режиме "1 запрос" мы проверяем только домен (host).
-    // Это устойчиво и не вызывает 400 на /search/url.
     let host = "";
 
     try {
       const u = new URL(url);
       host = u.host;
     } catch {
-      // если передали не URL, а домен — используем как есть
       host = String(url || "").trim();
     }
 

@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="icon" href="/icons/favicon.ico" sizes="64x64">
   <title>КиберЛинза</title>
-  <link rel="stylesheet" href="styles/popup.css" />
+  <link rel="stylesheet" href="styles/popup.css"/>
 </head>
 <body>
   <div class="wrap">
@@ -14,21 +14,14 @@
 
       <div class="headerActions">
         <button class="gearBtn" id="openQuickSettings" title="Быстрые настройки" aria-label="Быстрые настройки">⛭</button>
-        <!-- <a class="link" href="#" id="openOptions">Настройки</a> -->
       </div>
     </div>
 
     <div class="block">
       <div class="label">Проверить URL</div>
-      <input id="urlInput" class="input" placeholder="https://example.com" />
+      <input id="urlInput" class="input" placeholder="https://example.com"/>
       <button id="checkUrlBtn" class="btn">Проверить</button>
     </div>
-
-    <!-- <div class="block">
-      <div class="label">Проверить хэш</div>
-      <input id="hashInput" class="input" placeholder="MD5 / SHA1 / SHA256 (hex)" />
-      <button id="checkHashBtn" class="btn">Проверить</button>
-    </div> -->
 
     <div class="block">
       <div class="label">Проверить файл</div>
@@ -45,7 +38,6 @@
     </div>
   </div>
 
-  <!-- Быстрые настройки (оверлей по шестерёнке) -->
   <div class="overlay" id="quickOverlay" aria-hidden="true">
     <div class="overlayBackdrop" id="quickBackdrop"></div>
 
@@ -57,7 +49,7 @@
 
       <div class="block" style="margin-bottom: 10px;">
         <div class="label">API-ключ OpenTIP (KTIP)</div>
-        <input id="qsApiKey" class="input" type="password" placeholder="Вставьте ключ" />
+        <input id="qsApiKey" class="input" type="password" placeholder="Вставьте ключ"/>
         
         <div class="overlayRow">
           <button id="qsTestKey" class="btn">Проверить ключ</button>

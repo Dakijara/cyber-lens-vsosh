@@ -208,7 +208,6 @@ body {
   padding: 0 2px;
 }
 
-/* ---------- Overlay (быстрые настройки) ---------- */
 .overlay {
   position: fixed;
   inset: 0;

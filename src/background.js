@@ -78,7 +78,6 @@ browser.runtime.onMessage.addListener(async (msg) => {
 
       const result = await window.CyberlensAPI.checkHash(hash, settings.apiKey);
 
-      // Если пришли meta-данные (например, о файле) — аккуратно добавим
       if (msg.meta && typeof msg.meta === "object") {
         const fileName = msg.meta.fileName ? String(msg.meta.fileName).slice(0, 260) : "";
         const fileSize = Number.isFinite(msg.meta.fileSize) ? Number(msg.meta.fileSize) : null;
@@ -139,6 +138,5 @@ async function notify(title, message) {
       message
     });
   } catch {
-    // если уведомления запрещены — игнорируем
   }
 }

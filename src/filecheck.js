@@ -107,12 +107,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   let selectedFile = null;
   let computedSha256 = "";
 
-  // Подтягиваем последний результат
   try {
     const last = await send({ type: "GET_LAST_RESULT" });
     renderResult(last);
   } catch {
-    // ignore
   }
 
   fileInput.addEventListener("change", () => {
